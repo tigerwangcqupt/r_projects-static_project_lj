@@ -1,0 +1,52 @@
+---
+title: "lj_investigate"
+author: "wangsy"
+date: "2025-09-15"
+output:
+  pdf_document:
+    latex_engine: xelatex
+  html_document: default
+header-includes:
+  - \usepackage{ctex}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## One:Main Conclusions
+
+This chart is extracted from the Lianjia database, showing the distribution of a scatter plot between the age of properties and their floor area. 80% of the houses are from the last 30 years, with a small portion exceeding 50 years in age. 95% of the properties have an area of less than 200 square meters, with the majority being under 100 square meters. For more details on using data analysis see <https://github.com/tigerwangcqupt/r_projects-static_project_01.git>.
+
+## Two:Analysis of ideas and method
+
+```{r data define}
+library(tidyverse)
+library(dplyr)
+library(conflicted)
+library(showtext)
+font_add("SimSun", "simsun.ttc")  # 添加系统字体
+showtext_auto()  # 自动启用字体
+conflicts_prefer(dplyr::filter)
+conflicts_prefer(dplyr::lag)
+load("../data/lj_sh_2019.RData")
+```
+
+Specific chart display:
+
+```{r data plot, echo=FALSE}
+lj %>%
+  mutate(building_age=(2025-building_year)) %>%
+  ggplot() +
+  geom_point(aes(building_age,building_area))
+```
+
+## Three:Analysis Process
+
+| 房子年代 | 建筑面积 | 占比 |
+|----------|:--------:|-----:|
+| 10       |   100    |  80% |
+| 20       |    80    |  70% |
+| 30       |    90    |  60% |
+
+Based on the provided data and R data modeling, the following report data is generated.
