@@ -5,48 +5,70 @@ date: "2025-09-15"
 output:
   pdf_document:
     latex_engine: xelatex
-  html_document: default
+    number_sections: true
+  html_document:
+    number_sections: true
 header-includes:
   - \usepackage{ctex}
 ---
+# Main Conclusions
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+## summary:This chart is extracted from the Lianjia database, showing the distribution of a scatter plot between the age of properties and their floor area. 80% of the houses are from the last 30 years, with a small portion exceeding 50 years in age. 95% of the properties have an area of less than 200 square meters, with the majority being under 100 square meters. For more details on using data analysis see <https://github.com/tigerwangcqupt/r_projects-static_project_lj.git>.
 
-## One:Main Conclusions
 
-This chart is extracted from the Lianjia database, showing the distribution of a scatter plot between the age of properties and their floor area. 80% of the houses are from the last 30 years, with a small portion exceeding 50 years in age. 95% of the properties have an area of less than 200 square meters, with the majority being under 100 square meters. For more details on using data analysis see <https://github.com/tigerwangcqupt/r_projects-static_project_01.git>.
 
-## Two:Analysis of ideas and method
+# Analysis of ideas and method
+
+## collect Shanghai Lianjia housing data to form an R dataset.
+
+## using RStudio tools and R code libraries for data analysis
+
+## it requires the use of many R language libraries, including the library collection: tidyverse, dplyr, and so on.
+
+## using R code, output a scatter plot showing the relationship between the construction age and floor area of houses.
+
+# Analysis Process
+
+## load lj data
 
 ```{r data define}
 library(tidyverse)
 library(dplyr)
-library(conflicted)
-library(showtext)
-font_add("SimSun", "simsun.ttc")  # 添加系统字体
-showtext_auto()  # 自动启用字体
-conflicts_prefer(dplyr::filter)
-conflicts_prefer(dplyr::lag)
+library(knitr)
+library(kableExtra)
+library(formattable)
 load("../data/lj_sh_2019.RData")
 ```
 
-Specific chart display:
+```{r data table}
+# group statistics and calculate the proportion
+housing_stats <- lj %>%
+  mutate(building_age = 2025 - building_year) %>%
+  filter(building_age <= 20) %>%
+  group_by(building_age, building_area) %>%
+  summarise(building_amount = n(), .groups = "drop") %>%
+  mutate(
+    proportion = paste0(round(building_amount/sum(building_amount)*100, 2), "%"),
+    building_year = 2025-building_age
+  ) %>%
+  arrange(desc(proportion),desc(building_amount)) %>%
+  select(building_year, building_age, building_area, building_amount, proportion)
+
+# output table
+knitr::kable(
+  head(housing_stats, 300),
+  caption = "statistics on the distribution of newly built houses within 30 years (sorted by regional area)",
+  align = c("l", "c", "c", "r", "r")
+)
+```
+
+
+## plot lj geom_point chart
 
 ```{r data plot, echo=FALSE}
 lj %>%
-  mutate(building_age=(2025-building_year)) %>%
-  ggplot() +
-  geom_point(aes(building_age,building_area))
+   mutate(building_age = 2025 - building_year) %>%
+   filter(building_age <= 20) %>%
+   ggplot() +
+   geom_point(aes(building_age,building_area))
 ```
-
-## Three:Analysis Process
-
-| 房子年代 | 建筑面积 | 占比 |
-|----------|:--------:|-----:|
-| 10       |   100    |  80% |
-| 20       |    80    |  70% |
-| 30       |    90    |  60% |
-
-Based on the provided data and R data modeling, the following report data is generated.

@@ -1,0 +1,99 @@
+---
+title: "lj_old_home_investigate"
+author: "wangsy"
+date: "2025-09-15"
+output:
+  pdf_document:
+    latex_engine: xelatex
+    extra_dependencies: ["float", "afterpage"]     # 加载浮动控制宏包
+    toc: true
+    toc_depth: 2
+    includes:
+      in_header: header.tex
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Main Conclusions
+
+## main conclusion
+
+### when purchasing a second-hand home, Below is a property recommendation analysis solution based on the relationship between property age, size, and price.
+
+## code and documents
+
+### for more details on using data analysis see <https://github.com/tigerwangcqupt/r_projects-static_project_lj.git>.
+
+# Analysis of ideas and methods
+
+## ideas
+
+### property age is negatively correlated with price (older properties are priced lower)
+
+### building age depreciation coefficient = 1/(1+0.02\*building_age) (assuming an annual depreciation rate of 2%)
+
+### cost-performance score = (Standardized area \* 0.6 + Standardized building age coefficient \* 0.4) / Standardized unit price
+
+### the top 10 houses with the highest cost-performance ratio have been selected
+
+## methods
+
+### collect Shanghai Lianjia housing data to form an R dataset.
+
+### using RStudio tools and R code libraries for data analysis
+
+### it requires the use of many R language libraries, including the library collection: tidyverse, dplyr, and so on.
+
+### using R code, output a scatter plot showing the relationship between the construction age and floor area of houses.
+
+# Analysis Process
+
+## detail process
+
+### calculate key cost-performance indicators and standardize the data
+
+### plot a 3D scatter chart to display the relationship between house age, area, and price
+
+### sort and output the top 10 listings by cost-performance score
+
+### use a blue-to-red gradient color scheme to enhance visualization
+
+## r programming
+
+```{r data define}
+# Simulated Data Generation
+library(ggplot2)
+library(dplyr)
+load("../data/lj_sh_2019.RData")
+houses <- lj %>%
+  mutate(building_age = 2025 - building_year) %>%
+  filter(building_age <= 20) 
+# Cost-effectiveness calculation
+houses <- houses %>% 
+  mutate(
+    age_factor = 1/(1 + 0.02*building_age),
+    value_score = (scale(building_area)*0.6 + scale(age_factor)*0.4)/scale(price_sqm)
+  )
+```
+
+### plot lj geom_point chart and data table
+
+```{r data plot, echo=TRUE}
+ggplot(houses, aes(x=building_age, y=building_area, color=price_ttl)) +
+  geom_point(size=3, alpha=0.8) +
+  scale_color_gradient(low="#3498db", high="#e74c3c") +
+  labs(x="building_age", y="building_area", color="price_ttl") +
+  theme_minimal()
+top10 <- houses %>% 
+  arrange(desc(value_score)) %>% 
+  head(10) %>% 
+  select(property_name,building_age, building_area, price_ttl, price_sqm, value_score)
+knitr::kable(
+  head(top10, 300),
+  caption = "statistics Top 10 listings sorted by value-for-money score",
+  align = c("l", "c", "c", "r", "r","r")
+)
+```

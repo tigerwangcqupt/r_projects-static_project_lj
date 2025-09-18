@@ -1,0 +1,3 @@
+\setlength{\parskip}{0pt} % 取消段落间距
+\setlength{\parindent}{0pt} % 取消段落缩进
+\setlength{\fboxsep}{0pt} % 消除图形边框空白

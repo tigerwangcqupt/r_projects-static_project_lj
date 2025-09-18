@@ -1,0 +1,19 @@
+\usepackage[UTF8,fontset=windows]{ctex}
+\usepackage{float}
+\usepackage{placeins}
+\renewcommand{\floatpagefraction}{0.8}  % 提高浮动体填充阈值
+\let\cleardoublepage\clearpage  % 禁用章节空白页
+\FloatBarrier  % 在关键位置插入浮动体屏障
+
+\usepackage{geometry}
+\geometry{a4paper, left=20mm, right=20mm, top=20mm, bottom=20mm}
+\setlength{\parskip}{0pt} % 取消段落间距
+\setlength{\parindent}{0pt} % 取消段落缩进
+\setlength{\fboxsep}{0pt} % 消除图形边框空白
+
+
+\usepackage{titlesec}
+\usepackage{xeCJK}
+\setCJKmainfont[BoldFont=SimHei]{SimSun}  % 设置中文黑体
+\titleformat{\title}{\fontsize{32}{36}\bfseries\sffamily\heiti}{}{0em}{}
+
