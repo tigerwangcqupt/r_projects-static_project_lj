@@ -1,5 +1,5 @@
 ---
-title: "lj_old_home_investigate"
+title: "lj_old_homes_investigate"
 author: "wangsy"
 date: "2025-09-15"
 output:
